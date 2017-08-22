@@ -34,7 +34,7 @@ async function timeIt(name: string, fn: () => any) {
   });
   await timeIt('lines', async() => {
     let numLines = 0, numBytes = 0;
-    for await (const line of lines('../../github/router/test/nyc-gtfs/stop_times.txt')) {
+    for await (const line of lines('stop_times.txt')) {
       numLines++;
       numBytes += line.length;
     }
@@ -42,7 +42,7 @@ async function timeIt(name: string, fn: () => any) {
   });
   await timeIt('lines chunked', async() => {
     let numLines = 0, numBytes = 0;
-    for await (const chunk of lineChunks('../../github/router/test/nyc-gtfs/stop_times.txt')) {
+    for await (const chunk of lineChunks('stop_times.txt')) {
       for (const line of chunk) {
         numLines++;
         numBytes += line.length;

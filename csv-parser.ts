@@ -1,4 +1,3 @@
-// Copyright 2017 Sidewalk Labs | apache.org/licenses/LICENSE-2.0
 import * as fs from 'fs-extra';
 
 const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
@@ -49,12 +48,7 @@ export function parseLine(line: string) {
   return fields;
 }
 
-/**
- * Parse a CSV file in chunks, calling the callback with the complete rows found in those chunks.
- *
- * This provides a good balance between pulling the entire file into memory (which may not be
- * possible) and firing a callback on every line (which may be a performance bottlenck).
- */
+/** Read a file line-by-line, yielding arrays of lines. */
 export async function* fileChunks(filename: string, chunkSize: number) {
   const buffer = new Buffer(chunkSize);
 

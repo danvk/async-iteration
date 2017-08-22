@@ -1,4 +1,4 @@
-import {lines} from './csv-parser';
+import {lines, lineChunks} from './csv-parser';
 
 (Symbol as any)['asyncIterator'] = Symbol();
 
@@ -23,20 +23,30 @@ async function timeIt(name: string, fn: () => any) {
 }
 
 (async () => {
-  // await timeIt('sync', async () => {
-  //   // Note: for this to work, you need target: es6.
-  //   for (const i of syncRange(0, 100000)) {
-  //   }
-  // });
-  // await timeIt('async', async () => {
-  //   for await (const i of asyncRange(0, 100000)) {
-  //   }
-  // });
+  await timeIt('sync', async () => {
+    // Note: for this to work, you need target: es6.
+    for (const i of syncRange(0, 549996)) {
+    }
+  });
+  await timeIt('async', async () => {
+    for await (const i of asyncRange(0, 549996)) {
+    }
+  });
   await timeIt('lines', async() => {
     let numLines = 0, numBytes = 0;
     for await (const line of lines('../../github/router/test/nyc-gtfs/stop_times.txt')) {
       numLines++;
       numBytes += line.length;
+    }
+    console.log(`Read ${numLines} lines, ${numBytes} bytes.`);
+  });
+  await timeIt('lines chunked', async() => {
+    let numLines = 0, numBytes = 0;
+    for await (const chunk of lineChunks('../../github/router/test/nyc-gtfs/stop_times.txt')) {
+      for (const line of chunk) {
+        numLines++;
+        numBytes += line.length;
+      }
     }
     console.log(`Read ${numLines} lines, ${numBytes} bytes.`);
   });

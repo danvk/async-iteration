@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+import csv
 import time
 
 start_secs = time.time()
 num_lines = 0
 num_bytes = 0
-for line in open('../../github/router/test/nyc-gtfs/stop_times.txt'):
+for line in csv.reader(open('../../github/router/test/nyc-gtfs/stop_times.txt')):
     num_lines += 1
     num_bytes += len(line)
 

@@ -71,6 +71,14 @@ export async function* fileChunks(filename: string, chunkSize: number) {
 }
 
 export async function* lines(filename: string, options?: Options) {
+  for await (const chunk of lineChunks(filename, options)) {
+    for (const line of chunk) {
+      yield line;
+    }
+  }
+}
+
+export async function* lineChunks(filename: string, options?: Options) {
   options = options || {};
   const chunkSize = options.chunkSize || DEFAULT_CHUNK_SIZE;
   const encoding = options.encoding || 'utf-8';
@@ -96,8 +104,6 @@ export async function* lines(filename: string, options?: Options) {
       // ignore trailing newlines
       lines = lines.slice(0, -1);
     }
-    for (const line of lines) {
-      yield line;
-    }
+    yield lines;
   }
 }

@@ -1,4 +1,4 @@
-import {lines, lineChunks} from './csv-parser';
+import {lines, lineChunks, linesSync} from './csv-parser';
 
 (Symbol as any)['asyncIterator'] = Symbol();
 
@@ -40,13 +40,21 @@ async function timeIt(name: string, fn: () => any) {
     }
     console.log(`Read ${numLines} lines, ${numBytes} bytes.`);
   });
-  await timeIt('lines chunked', async() => {
+  await timeIt('lines chunked', async () => {
     let numLines = 0, numBytes = 0;
     for await (const chunk of lineChunks('stop_times.txt')) {
       for (const line of chunk) {
         numLines++;
         numBytes += line.length;
       }
+    }
+    console.log(`Read ${numLines} lines, ${numBytes} bytes.`);
+  });
+  await timeIt('lines sync', async () => {
+    let numLines = 0, numBytes = 0;
+    for (const line of linesSync('stop_times.txt')) {
+      numLines++;
+      numBytes += line.length;
     }
     console.log(`Read ${numLines} lines, ${numBytes} bytes.`);
   });

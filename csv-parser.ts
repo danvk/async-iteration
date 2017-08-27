@@ -101,3 +101,48 @@ export async function* lineChunks(filename: string, options?: Options) {
     yield lines;
   }
 }
+
+export function* fileChunksSync(filename: string, chunkSize: number) {
+  const buffer = new Buffer(chunkSize);
+
+  let leftovers = '';
+  const fid = fs.openSync(filename, 'r');
+  let bytesRead;
+  while (bytesRead = fs.readSync(fid, buffer, 0, chunkSize, null)) {
+    if (bytesRead === 0) break;
+    yield buffer;
+    if (bytesRead < chunkSize) break;
+  }
+}
+
+export function* linesSync(filename: string, options?: Options) {
+  options = options || {};
+  const chunkSize = options.chunkSize || DEFAULT_CHUNK_SIZE;
+  const encoding = options.encoding || 'utf-8';
+  let delim = options.lineDelimiter || null;
+
+  let leftovers: string = '';
+
+  for (const chunk of fileChunksSync(filename, chunkSize)) {
+    const data = chunk.toString(encoding);
+    const combinedData = leftovers + data;
+    if (!delim) {
+      delim = detectDelimiter(combinedData);
+      if (!delim) {
+        leftovers = combinedData;
+        continue;
+      }
+    }
+
+    let lines = combinedData.split(delim);
+    leftovers = lines[lines.length - 1];
+    lines = lines.slice(0, -1);
+    if (lines[lines.length - 1] === '') {
+      // ignore trailing newlines
+      lines = lines.slice(0, -1);
+    }
+    for (const line of lines) {
+      yield line;
+    }
+  }
+}

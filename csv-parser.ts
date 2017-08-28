@@ -59,8 +59,11 @@ export async function* fileChunks(filename: string, chunkSize: number) {
   let readResult;
   while (readResult = await fs.read(fid, buffer, 0, chunkSize, null)) {
     if (readResult.bytesRead === 0) break;
+    if (readResult.bytesRead < chunkSize) {
+      yield readResult.buffer.slice(0, readResult.bytesRead);
+      break;
+    }
     yield readResult.buffer;
-    if (readResult.bytesRead < chunkSize) break;
   }
 }
 
@@ -110,8 +113,11 @@ export function* fileChunksSync(filename: string, chunkSize: number) {
   let bytesRead;
   while (bytesRead = fs.readSync(fid, buffer, 0, chunkSize, null)) {
     if (bytesRead === 0) break;
+    if (bytesRead < chunkSize) {
+      yield buffer.slice(0, bytesRead);
+      break;
+    }
     yield buffer;
-    if (bytesRead < chunkSize) break;
   }
 }
 

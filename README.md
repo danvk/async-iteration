@@ -8,5 +8,41 @@ See [my post][1] about [async iterators][2] on Medium.
     ./node_modules/.bin/ts-node async-iter.ts
     python line_reader.py
 
+## Results
+
+Play around with your node version and `target` in `tsconfig.json` to see how this is getting better.
+
+With node 10.1.0, TypeScript 2.8 and `"target": "esnext"`:
+
+```
+$ ./node_modules/.bin/ts-node async-iter.ts
+range sync: 30 ms
+range async: 172 ms
+lines async: 621 ms
+lines async chunked: 283 ms
+lines sync: 358 ms
+```
+
+vs. node 8.11.2 and `"target": "es6"`:
+
+```
+$ ./node_modules/.bin/ts-node async-iter.ts
+range sync: 30 ms
+range async: 1408 ms
+lines async: 1800 ms
+lines async chunked: 236 ms
+lines sync: 370 ms
+```
+
+So the simplest `for await of` loop has gotten ~8x faster and the async csv
+parser has gotten ~3x faster.
+
+For comparison, Python 3.6.5 reads the same file in 145ms:
+
+```
+$ python line_reader.py
+Read 549996 lines, 33421381 bytes in 0.145075 s
+```
+
 [1]: https://medium.com/p/4767df03d85b/
 [2]: https://github.com/tc39/proposal-async-iteration

@@ -1,6 +1,8 @@
 import {lines, lineChunks, linesSync} from './csv-parser';
 
-(Symbol as any)['asyncIterator'] = Symbol();
+if (!(Symbol as any)['asyncIterator']) {
+  (Symbol as any)['asyncIterator'] = Symbol();
+}
 
 async function* asyncRange(from: number, to: number) {
   for (let i = from; i < to; i++) {
@@ -23,16 +25,16 @@ async function timeIt(name: string, fn: () => any) {
 }
 
 (async () => {
-  await timeIt('sync', async () => {
+  await timeIt('range sync', async () => {
     // Note: for this to work, you need target: es6.
     for (const i of syncRange(0, 549996)) {
     }
   });
-  await timeIt('async', async () => {
+  await timeIt('range async', async () => {
     for await (const i of asyncRange(0, 549996)) {
     }
   });
-  await timeIt('lines', async() => {
+  await timeIt('lines async', async() => {
     let numLines = 0, numBytes = 0;
     for await (const line of lines('stop_times.txt')) {
       numLines++;
@@ -40,7 +42,7 @@ async function timeIt(name: string, fn: () => any) {
     }
     console.log(`Read ${numLines} lines, ${numBytes} bytes.`);
   });
-  await timeIt('lines chunked', async () => {
+  await timeIt('lines async chunked', async () => {
     let numLines = 0, numBytes = 0;
     for await (const chunk of lineChunks('stop_times.txt')) {
       for (const line of chunk) {

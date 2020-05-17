@@ -7,10 +7,33 @@ See [my post][1] about [async iterators][2] on Medium.
     yarn
     ./node_modules/.bin/ts-node async-iter.ts
     python line_reader.py
+    python csv_reader.py
 
 ## Results
 
 Play around with your node version and `target` in `tsconfig.json` to see how this is getting better.
+
+With node 14.2.0, TypeScript 3.9 and `"target": "esnext"`:
+
+```
+$ ts-node async-iter.ts
+range sync: 21 ms
+range async: 125 ms
+lines async: 299 ms
+lines async chunked: 132 ms
+lines sync: 169 ms
+```
+
+With node 12.16.2, TypeScript 3.9 and `"target": "esnext"`:
+
+```
+$ ts-node async-iter.ts
+range sync: 31 ms
+range async: 136 ms
+lines async: 338 ms
+lines async chunked: 197 ms
+lines sync: 184 ms
+```
 
 With node 10.1.0, TypeScript 2.8 and `"target": "esnext"`:
 

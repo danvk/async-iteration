@@ -9,7 +9,7 @@
     "csv": "^0.4.6",
     "fs-extra": "^4.0.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.8.3"
+    "typescript": "^3.9.2"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",

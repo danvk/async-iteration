@@ -63,8 +63,10 @@ parser has gotten ~3x faster.
 For comparison, Python 3.6.5 reads the same file in 145ms:
 
 ```
-$ python line_reader.py
-Read 549996 lines, 33421381 bytes in 0.145075 s
+$ python3.6 line_reader.py
+Read 549996 lines, 32871385 bytes in 0.295456 s
+$ python3.7 csv_reader.py
+Read 549996 lines, 4949964 cells in 0.936364 s
 ```
 
 [1]: https://medium.com/p/4767df03d85b/

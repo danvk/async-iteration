@@ -1,6 +1,6 @@
 # Async Iteration Playground
 
-See [my post][1] about [async iterators][2] on Medium.
+See [my post][1] about [async iterators][2] on Medium from 2017. Things have gotten considerably better in Node land since that post was written.
 
 ## Quickstart
 
@@ -9,9 +9,55 @@ See [my post][1] about [async iterators][2] on Medium.
     python line_reader.py
     python csv_reader.py
 
-## Results
+## Results (2023)
 
 Play around with your node version and `target` in `tsconfig.json` to see how this is getting better.
+
+With Node 18.8.0:
+
+```
+$ ts-node async-iter.ts
+range sync: 8 ms
+range async: 54 ms
+lines async: 117 ms
+lines async chunked: 43 ms
+lines sync: 58 ms
+```
+
+With Node 16.19.1:
+
+```
+$ ts-node async-iter.ts
+range sync: 8 ms
+range async: 56 ms
+lines async: 132 ms
+lines async chunked: 46 ms
+lines sync: 62 ms
+```
+
+Now on a 2022 M2 MacBook Air with node 14.17.1, TypeScript 3.9 and `"target": "esnext"`:
+
+```
+$ ts-node async-iter.ts
+range sync: 19 ms
+range async: 62 ms
+lines async: 154 ms
+lines async chunked: 78 ms
+lines sync: 96 ms
+```
+
+Compare with Python 3.11.4:
+
+```
+$ python line_reader.py
+Read 549996 lines, 32871385 bytes in 0.099241 s
+$ python csv_reader.py
+Read 549996 lines, 4949964 cells in 0.349307 s
+```
+
+So in 2023, Python 3.11 and Node 18.8 are within about 20% of one another (117ms for "range async" in Node vs. 99ms for Python).
+
+### Older Results (2017–2020)
 
 With node 14.2.0, TypeScript 3.9 and `"target": "esnext"`:
 
